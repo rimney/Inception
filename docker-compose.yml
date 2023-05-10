@@ -1,0 +1,17 @@
+version: "3.7"
+
+services:
+  wp:
+    image: wordpress
+    ports:
+      - "80:80"
+    environment:
+      - WORDPRESS_DB_HOST=127.0.0.1
+      - WORDPRESS_DB_USER=rimney
+      - WORDPRESS_DB_PASSWORD=password
+      - WORDPRESS_DB_NAME=wpsite
+      - WORDPRESS_TABLE_PREFIX=wp_
+    volumes:
+      - /opt/wpsite/themes:/var/www/html/wp-content/themes
+      - /opt/wpsite/plugins:/var/www/html/wp-content/plugins
+      - /opt/wpsite/uploads:/var/www/html/wp-content/uploads
