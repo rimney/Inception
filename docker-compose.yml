@@ -1,17 +1,65 @@
-version: "3.7"
+version: '3.7'
 
 services:
-  wp:
-    image: wordpress
-    ports:
-      - "80:80"
-    environment:
-      - WORDPRESS_DB_HOST=127.0.0.1
-      - WORDPRESS_DB_USER=rimney
-      - WORDPRESS_DB_PASSWORD=password
-      - WORDPRESS_DB_NAME=wpsite
-      - WORDPRESS_TABLE_PREFIX=wp_
+  mariadb:
+    env_file:
+      - .env
+    # args:
+    #     MYSQL_DATABASE: ${MYSQL_DATABASE}
+    #     MYSQL_USER: ${MYSQL_USER}
+    #     MYSQL_PASSWORD : ${MYSQL_PASSWORD}
+    #     MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    container_name: mariadb
+    build: srcs/mariadb/
+    image: mariadb:42
     volumes:
-      - /opt/wpsite/themes:/var/www/html/wp-content/themes
-      - /opt/wpsite/plugins:/var/www/html/wp-content/plugins
-      - /opt/wpsite/uploads:/var/www/html/wp-content/uploads
+      - db_data:/var/lib/mysql
+    networks:
+      - inception
+    restart: always
+
+  wordpress:
+    environment:
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+    container_name: wordpress
+    build: srcs/wordpress/
+    image: wordpress:42
+    depends_on:
+      - mariadb
+    networks:
+      - inception
+    volumes:
+      - wp_data:/var/www/html/wordpress
+    restart: always
+
+  nginx:
+    container_name: nginx
+    build: srcs/nginx/
+    image: nginx:42
+    depends_on:
+      - wordpress
+    ports:
+      - "433:433"
+    volumes:
+      - wp_data:/var/www/html/wordpress
+    restart: always
+
+networks:
+  inception:
+
+volumes:
+  db_data:
+    driver: local
+    driver_opts:
+      type: none
+      device: srcs/rimney/mysql
+      o: bind
+  wp_data:
+    driver: local
+    driver_opts:
+      type: none
+      device: srcs/rimney/wordpress
+      o: bind

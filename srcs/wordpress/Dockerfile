@@ -1,7 +1,27 @@
-from debian:buster
+FROM debian:buster
 
-RUN apt-get update
+RUN apt-get update && apt-get -y install \
+wget \
+php \
+php-cgi \
+php-mysql \
+php-fpm \
+php-pdo \
+php-gd php-cli \
+php-mbstring \
+&& rm -rf /var/lib/apt/lists/*
 
-RUN apt-get install -y php7.3-fpm curl php7.3-mysql
+COPY ./conf/www.conf /var/www/html/
 
-CMD ["php-fpm7.3", "-F", "-R"]
+RUN mkdir /run/php
+
+COPY ./tools/create_wordpress.sh /usr/local/bin/
+
+ENTRYPOINT ["create_wordpress.sh"]
+
+WORKDIR /var/www/html/
+
+EXPOSE 9000
+
+
+CMD ["/usr/sbin/php-fpm7.3", "-F"]
