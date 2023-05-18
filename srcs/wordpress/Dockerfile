@@ -4,7 +4,7 @@ RUN apt update
 
 WORKDIR /var/www/html/wordpress/
 
-RUN apt install -y php-cli php-fpm php-mysql php-curl
+RUN apt install -y  php7.3-fpm php7.3-mysql
 RUN apt install -y wget
 
 RUN wget https://wordpress.org/latest.tar.gz

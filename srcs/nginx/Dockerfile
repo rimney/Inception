@@ -11,6 +11,6 @@ RUN  mkdir -p /etc/nginx/certif
 COPY ./tools/* /etc/nginx/certif
 COPY ./conf/default  /etc/nginx/sites-available/
 
-EXPOSE 443
+7EXPOSE 443
 
 CMD ["nginx", "-g", "daemon off;"]
