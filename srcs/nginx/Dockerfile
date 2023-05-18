@@ -4,9 +4,12 @@ RUN apt-get update && apt-get -y install nginx \
 openssl \
 && rm -rf /var/lib/apt/lists/*
 
-RUN openssl req -newkey rsa:4096 -x509 -sha256 -days 365 -nodes -out /etc/ssl/rimney.42.fr.pem -keyout /etc/ssl/rimney.42.fr.key -subj "/C=MA/ST=Ben Guerrir/L=Ben Guerrir/O=1337/OU=rimney/CN=rimney.42.fr"
+WORKDIR /var/www/html/wordpress/
+RUN  chmod 755 /var/www/html/wordpress/
+RUN  mkdir -p /etc/nginx/certif
 
-COPY conf/nginx.conf /etc/nginx/conf.d
+COPY ./tools/* /etc/nginx/certif
+COPY ./conf/default  /etc/nginx/sites-available/
 
 EXPOSE 443
 

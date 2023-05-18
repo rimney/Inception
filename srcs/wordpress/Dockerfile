@@ -1,27 +1,24 @@
 FROM debian:buster
 
-RUN apt-get update && apt-get -y install \
-wget \
-php \
-php-cgi \
-php-mysql \
-php-fpm \
-php-pdo \
-php-gd php-cli \
-php-mbstring \
-&& rm -rf /var/lib/apt/lists/*
+RUN apt update
 
-COPY ./conf/www.conf /var/www/html/
+WORKDIR /var/www/html/wordpress/
 
-RUN mkdir /run/php
+RUN apt install -y php-cli php-fpm php-mysql php-curl
+RUN apt install -y wget
 
-COPY ./tools/create_wordpress.sh /usr/local/bin/
-
-ENTRYPOINT ["create_wordpress.sh"]
-
-WORKDIR /var/www/html/
-
-EXPOSE 9000
-
-
-CMD ["/usr/sbin/php-fpm7.3", "-F"]
+RUN wget https://wordpress.org/latest.tar.gz
+RUN tar -xvf latest.tar.gz
+RUN mv wordpress/* ./
+RUN rm -rf wordpress latest.tar.gz
+RUN rm -f latest.tar.gz
+RUN chmod 777 /var/www/html/wordpress/
+RUN chmod 777 /var/www/html/
+RUN rm -fr wp-config-sample.php
+COPY ./conf/wp-config.php .
+COPY ./tools/run.sh .
+RUN mkdir -p /run/php/
+RUN chmod +x run.sh
+RUN chown -R www-data:1000 /var/www/html/wordpress
+ENTRYPOINT [ "./run.sh" ]
+CMD ["php-fpm7.3" ,"-F", "-R"]

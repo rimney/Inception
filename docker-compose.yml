@@ -2,31 +2,31 @@ version: '3.7'
 
 services:
   mariadb:
-    env_file:
-      - .env
-    # args:
-    #     MYSQL_DATABASE: ${MYSQL_DATABASE}
-    #     MYSQL_USER: ${MYSQL_USER}
-    #     MYSQL_PASSWORD : ${MYSQL_PASSWORD}
-    #     MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-    container_name: mariadb
-    build: srcs/mariadb/
     image: mariadb:42
+    container_name: mariadb
+    build:
+      context: srcs/mariadb/
+      args:
+        MYSQL_DATABASE: ${MYSQL_DATABASE}
+        MYSQL_USER: ${MYSQL_USER}
+        MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+        MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    restart: always
     volumes:
       - db_data:/var/lib/mysql
     networks:
       - inception
-    restart: always
 
   wordpress:
+    image: wordpress:42
+    container_name: wordpress
+    build:
+      context: ${PWD}/srcs/wordpress/
     environment:
       - MYSQL_DATABASE=${MYSQL_DATABASE}
       - MYSQL_USER=${MYSQL_USER}
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
-    container_name: wordpress
-    build: srcs/wordpress/
-    image: wordpress:42
     depends_on:
       - mariadb
     networks:
@@ -36,9 +36,9 @@ services:
     restart: always
 
   nginx:
+    image: nginx:42
     container_name: nginx
     build: srcs/nginx/
-    image: nginx:42
     depends_on:
       - wordpress
     ports:
@@ -49,17 +49,18 @@ services:
 
 networks:
   inception:
+    driver: bridge
 
 volumes:
   db_data:
     driver: local
     driver_opts:
       type: none
-      device: srcs/rimney/mysql
+      device: ./srcs/rimney/mysql
       o: bind
   wp_data:
     driver: local
     driver_opts:
       type: none
-      device: srcs/rimney/wordpress
+      device: ./srcs/rimney/wordpress
       o: bind
