@@ -15,5 +15,4 @@ COPY ./conf/50-server.cnf /etc/mysql/mariadb.conf.d/50-server.cnf
 RUN chmod +x /setup_db_user.sh
 
 RUN  ./setup_db_user.sh
-
 CMD ["mysqld"]

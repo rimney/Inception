@@ -1,12 +1,8 @@
 server {
-        listen 443 default_server;
-        listen [::]:443 default_server;
+        listen 80 default_server;
+        listen [::]:80 default_server;
 
         server_name _;
-        ssl on;
-        ssl_certificate /etc/nginx/certif/ssl.crt;
-        ssl_certificate_key /etc/nginx/certif/ssl.key;
-        ssl_protocols TLSv1.3;
         index index.html index.php;
 
         root /var/www/html/wordpress;
