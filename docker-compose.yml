@@ -7,45 +7,45 @@ services:
     build:
       context: srcs/mariadb/
       args:
-        MYSQL_DATABASE: ${MYSQL_DATABASE}
-        MYSQL_USER: ${MYSQL_USER}
-        MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-        MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+        MYSQL_DATABASE: wordpress
+        MYSQL_USER: rimney
+        MYSQL_PASSWORD: Ak4321@@
+        MYSQL_ROOT_PASSWORD: Ak4321@@
     restart: always
     volumes:
       - db_data:/var/lib/mysql
     networks:
       - inception
 
-  wordpress:
-    image: wordpress:42
-    container_name: wordpress
-    build:
-      context: ${PWD}/srcs/wordpress/
-    environment:
-      - MYSQL_DATABASE=${MYSQL_DATABASE}
-      - MYSQL_USER=${MYSQL_USER}
-      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
-      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
-    depends_on:
-      - mariadb
-    networks:
-      - inception
-    volumes:
-      - wp_data:/var/www/html/wordpress
-    restart: always
+  # wordpress:
+  #   image: wordpress:42
+  #   container_name: wordpress
+  #   build:
+  #     context: ${PWD}/srcs/wordpress/
+  #   environment:
+  #     - MYSQL_DATABASE=${MYSQL_DATABASE}
+  #     - MYSQL_USER=${MYSQL_USER}
+  #     - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+  #     - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+  #   depends_on:
+  #     - mariadb
+  #   networks:
+  #     - inception
+  #   volumes:
+  #     - wp_data:/var/www/html/wordpress
+  #   restart: always
 
-  nginx:
-    image: nginx:42
-    container_name: nginx
-    build: srcs/nginx/
-    depends_on:
-      - wordpress
-    ports:
-      - "433:433"
-    volumes:
-      - wp_data:/var/www/html/wordpress
-    restart: always
+  # nginx:
+  #   image: nginx:42
+  #   container_name: nginx
+  #   build: srcs/nginx/
+  #   depends_on:
+  #     - wordpress
+  #   ports:
+  #     - "433:433"
+  #   volumes:
+  #     - wp_data:/var/www/html/wordpress
+  #   restart: always
 
 networks:
   inception:
@@ -58,9 +58,9 @@ volumes:
       type: none
       device: ./srcs/rimney/mysql
       o: bind
-  wp_data:
-    driver: local
-    driver_opts:
-      type: none
-      device: ./srcs/rimney/wordpress
-      o: bind
+  # wp_data:
+  #   driver: local
+  #   driver_opts:
+  #     type: none
+  #     device: ./srcs/rimney/wordpress
+  #     o: bind
