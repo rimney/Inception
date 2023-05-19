@@ -5,11 +5,13 @@ services:
     container_name: mariadb
     build:
       context: ./srcs/mariadb/
-      args:
-        MYSQL_DATABASE: wordpress
-        MYSQL_USER: rimney
-        MYSQL_PASSWORD: 1234
-        MYSQL_ROOT_PASSWORD: 1234
+      # args:
+      #   MYSQL_DATABASE: wordpress
+      #   MYSQL_USER: rimney
+      #   MYSQL_PASSWORD: 1234
+      #   MYSQL_ROOT_PASSWORD: 1234
+    env_file:
+      - .env
     restart: always
     volumes:
       - db_data:/var/lib/mysql
@@ -19,19 +21,21 @@ services:
   wordpress:
     container_name: wordpress
     build: ./srcs/wordpress/
-    environment:
-      - MYSQL_DATABASE=wordpress
-      - MYSQL_USER=rimney
-      - MYSQL_PASSWORD=1234
-      - MYSQL_ROOT_PASSWORD=1234
-      - MYSQL_HOSTNAME=mariadb
-      - DOMAIN_NAME=localhost
-      - WP_USER=rimney
-      - WP_ADMIN_USER=rimney42
-      - WP_ADMIN_PW=1234
-      - WP_ADMIN_EMAIL=rimney13@gmail.com
-      - WP_EMAIL=rimney13@gmail.com
-      - WP_PW=1234
+    # environment:
+    #   - MYSQL_DATABASE=wordpress
+    #   - MYSQL_USER=rimney
+    #   - MYSQL_PASSWORD=1234
+    #   - MYSQL_ROOT_PASSWORD=1234
+    #   - MYSQL_HOSTNAME=mariadb
+    #   - DOMAIN_NAME=localhost
+    #   - WP_USER=rimney
+    #   - WP_ADMIN_USER=rimney42
+    #   - WP_ADMIN_PW=1234
+    #   - WP_ADMIN_EMAIL=rimney13@gmail.com
+    #   - WP_EMAIL=rimney13@gmail.com
+    #   - WP_PW=1234
+    env_file:
+      - .env
     depends_on:
       - mariadb
     networks:
@@ -47,6 +51,8 @@ services:
     build: ./srcs/nginx/
     depends_on:
       - wordpress
+    env_file:
+      - .env
     ports:
       - "80:80"
       - "443:443"
