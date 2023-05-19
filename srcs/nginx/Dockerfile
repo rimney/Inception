@@ -8,7 +8,8 @@ RUN  chmod 755 /var/www/html/wordpress/
 RUN  mkdir -p /etc/nginx/certif
 
 COPY ./tools/* /etc/nginx/certif
-COPY ./conf/default  /etc/nginx/sites-available/
+RUN rm -rf /etc/nginx/sites-available/*
+COPY ./conf/default /etc/nginx/sites-available/default
 
 EXPOSE 80
 
