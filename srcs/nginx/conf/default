@@ -1,9 +1,7 @@
 server {
         listen 443 ssl;
-        listen [::]:443 ;
 
-        server_name _;
-        index index.php index.html;
+        index index.php;
         ssl_certificate /etc/nginx/certif/ssl.crt;
         ssl_certificate_key /etc/nginx/certif/ssl.key;
 
