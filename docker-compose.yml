@@ -52,5 +52,15 @@ networks:
     driver: bridge
 
 volumes:
-  db_data:
+  db_data: 
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/rimney/data/mariadb
   wp_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/rimney/data/wordpress
